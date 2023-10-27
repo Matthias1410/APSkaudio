@@ -1,23 +1,7 @@
-import pydub
-import pydub.playback
 import wave
 import sys
-
-
-def kwadrat(number):
-    if isinstance(number, int):
-        i=number*number
-        return i
-    else:
-        return("no chyba ci sie pomylilo", number,"is not an integer")
-        
-        
-def muzyczka(plik):
-    a = pydub.AudioSegment.from_mp3('plik')
-    pydub.playback.play(a)
     
     
-
 # Use wave package (native to Python) for reading the received audio file
 def discovermessage(file):
     song = wave.open(file, mode='rb')
