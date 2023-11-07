@@ -137,7 +137,7 @@ while True:
                 pass
         elif event == "5":
             try:
-                dane=funkcje.discovermessage(filename,1)
+                dane=funkcje.discovermessage(filename,1,window)
                 window["-WYNIK-"].update(dane)
             except:
                 pass
