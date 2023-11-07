@@ -12,58 +12,10 @@ import funkcje
 import pyperclip
 
 # First the window layout in 2 columns
-
-def update_counter(window):
-    i = 0
-    while True:
-        window["-licznik-"].update(i)
-        time.sleep(1)
-        i += 1
-
-def display_gif(filename, window):
-    try:
-        gif = Image.open(filename)
-        frames = []
-        durations = []
-        for frame in range(gif.n_frames):
-            gif.seek(frame)
-            resized_frame = gif.copy()
-            #resized_frame.thumbnail((200, 200))  # Dostosuj rozmiar klatek
-            frame_data = ImageTk.PhotoImage(resized_frame)
-            frames.append(frame_data)
-            durations.append(gif.info['duration'])
-
-        current_frame = 0
-        playing_gif = True  # Zmienna określająca, czy GIF jest odtwarzany
-
-        while True:
-            if playing_gif:
-                window['-IMAGE-'].update(data=frames[current_frame % len(frames)])
-                current_frame += 1
-            event, values = window.read(timeout=durations[current_frame % len(frames)])
-
-            if event in (sg.WIN_CLOSED, 'Exit'):
-                break
-            elif event == "-FILE LIST-":  # Zresetuj odtwarzanie GIF po wybraniu nowego pliku
-                playing_gif = False
-                filename = os.path.join(values["-FOLDER-"], values["-FILE LIST-"][0])
-                window["-TOUT-"].update(filename)
-                if filename.lower().endswith('.gif'):
-                    print("pew")
-                    display_gif(filename, window) 
-                    event="-FILE LIST-"
-                elif filename.lower().endswith('png'):           
-                    window["-IMAGE-"].update(filename=filename)
-                else:
-                    muzyczka(filename)
-                break
-
-    except Exception as e:
-        print(f"Error: {e}")
         
-        
+'''        
 file_list_column = [
-    [sg.Text("Licznik od momentu startu"),sg.Text("Jakasliczba",key="-licznik-"),],
+    [sg.Button("Back to Main Menu",key="MAIN_menu", enable_events=True,size=(20, 2))],
     [
         sg.Text("Image Folder"),
 
@@ -88,68 +40,110 @@ image_viewer_column = [
     [sg.Text(size=(20, 5),key="-TEXT-")],
     
 ]
+main_menu_options = [
+    [sg.Button("Tryb LSB",key="LSB_button", enable_events=True,size=(10, 2)),sg.Button("Tryb Drugi",key="TWO_button", enable_events=True,size=(10, 2))],
+    [sg.Button("Exit",key="EXIT_button", enable_events=True,size=(10, 2))],
+    
+    ]
+
 
 # ----- Full layout -----
-layout = [
+layout1 = [
+    [
+    sg.Column(main_menu_options)
+    
+    ]
+]
+
+layout2 = [
     [
         sg.Column(file_list_column),
         sg.VSeperator(),
         sg.Column(image_viewer_column),
     ]
 ]
+'''
 
 
-window = sg.Window("APskaudio", layout, resizable=True, finalize=True)
 
-# Run the Event Loop
 
-thread = threading.Thread(target=update_counter, args=(window,), daemon=True)
-thread.start()
-licznik=0    
+
+window1, window2, window3 = funkcje.make_window1(), None, None
+
+#window = sg.Window("APskaudio", layout1, resizable=True, finalize=True)
+modeLSB=1
 while True:
-    event, values = window.read(timeout=1000)
+    window, event, values = sg.read_all_windows()
     
-
     
-    if event == "Exit" or event == sg.WIN_CLOSED:
-        break
-    # Folder name was filled in, make a list of files in the folder
-    if event == "-FOLDER-":
-        folder = values["-FOLDER-"]
-        try:
+    #dzialanie na window 1
+    if window==window1:
+        if event == "LSB_button":
+            window1.hide()
+            window2=funkcje.make_window2()
+        if event == "TWO_button":
+            window1.hide()
+            window3=funkcje.make_window3()
+        if event == "EXIT_button":
+            break
+    
+            
+            
+    #dzialania na window 2
+    if window == window2:
+        #cofniecie do main menu
+        if event == "MAIN_menu":
+            window2.hide()
+            window1.un_hide()
+    # Reszta okna 2
+        if event=="MODE_ONE":
+            modeLSB=1
+            print(modeLSB)
+        elif event=="MODE_TWO":
+            modeLSB=2
+            print(modeLSB)
+        elif event=="MODE_THREE":
+            modeLSB=3
+            print(modeLSB)
+        
+        if event == "-FOLDER-":
+            folder = values["-FOLDER-"]
+            try:
             # Get list of files in folder
-            file_list = os.listdir(folder)
-        except:
-            file_list = []
+                file_list = os.listdir(folder)
+            except:
+                file_list = []
 
-        fnames = [
-            f
-            for f in file_list
-            if os.path.isfile(os.path.join(folder, f))
-            and f.lower().endswith(("wav"))
-        ]
-        window["-FILE LIST-"].update(fnames)
-    elif event == "-FILE LIST-":  # A file was chosen from the listbox     
-        try:
-            filename = os.path.join(values["-FOLDER-"], values["-FILE LIST-"][0])
-            window["-TOUT-"].update(filename)
-        except:
-            pass
-    elif event == "4":
-        try:
-            dane=values['-INPUT-']
-            outputname=values['-OUTPUT-']
-            print(dane,outputname)
-            funkcje.hidemessage(filename,dane,outputname)
-        except:
-            pass
-    elif event == "5":
-        try:
-            dane=funkcje.discovermessage(filename)
-            window["-WYNIK-"].update(dane)
-        except:
-            pass
-          
+            fnames = [
+                f
+                for f in file_list
+                if os.path.isfile(os.path.join(folder, f))
+                and f.lower().endswith(("wav"))
+            ]
+            window["-FILE LIST-"].update(fnames)
+        elif event == "-FILE LIST-":  # A file was chosen from the listbox     
+            try:
+                filename = os.path.join(values["-FOLDER-"], values["-FILE LIST-"][0])
+                window["-TOUT-"].update(filename)
+            except:
+                pass
+        elif event == "4":
+            try:
+                dane=values['-INPUT-']
+                outputname=values['-OUTPUT-']
+                print(dane,outputname)
+                funkcje.hidemessage(filename,dane,outputname,modeLSB)
+            except:
+                pass
+        elif event == "5":
+            try:
+                dane=funkcje.discovermessage(filename,1)
+                window["-WYNIK-"].update(dane)
+            except:
+                pass
+    #dzialania na window 3
+    if window==window3:
+        print("xddd")
 
 
 window.close()
