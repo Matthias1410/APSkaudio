@@ -39,7 +39,7 @@ def make_window2():
         [sg.Text(size=(40, 1), key="-TOUT-")],
         [sg.Text("Text to code",size=(15, 1)), sg.Multiline(key="-INPUT-",size=(20, 10))],
         [sg.Text("outputname",size=(15, 1)), sg.InputText(key="-OUTPUT-",size=(20, 15))],
-        [sg.Button("Zakoduj wiadomosc",key="4", enable_events=True,size=(10, 2)),sg.Button("Odkoduj",key="5", enable_events=True,size=(10, 2))],
+        [sg.Button("Zakoduj wiadomosc",key="4", enable_events=True,size=(10, 2)),sg.Button("Odkoduj",key="5", enable_events=True,size=(10, 2)),sg.Text("Rezultat",size=(15, 1),key="RESULT")],
         [sg.Text("Wynik dekodowanie",size=(15, 1)),sg.Multiline(key="-WYNIK-",size=(20, 10))],
         [sg.Text(size=(20, 5),key="-TEXT-")],
     
@@ -62,7 +62,7 @@ def make_window3():
     
 
 # Use wave package (native to Python) for reading the received audio file
-def discovermessage(file,tryb):
+def discovermessage(file,tryb,window):
     print("pls i need help")
     song = wave.open(file, mode='rb')
 # Convert audio to byte array
@@ -78,7 +78,13 @@ def discovermessage(file,tryb):
 # Convert byte array back to string
     string = "".join(chr(int("".join(map(str,extracted1[i:i+8])),2)) for i in range(0,len(extracted1),8))
 # Cut off at the filler characters
-    decoded = string.split("###")[0]
+    if ('###') in string:
+        decoded = string.split("###")[0]
+        window["RESULT"].update("Success")
+    else:
+        window["RESULT"].update("Failure")
+        return ("FAIL")
+    
 
 # Print the extracted text
     song.close()
