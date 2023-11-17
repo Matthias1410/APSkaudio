@@ -80,11 +80,18 @@ while True:
     if window==window1:
         if event == "LSB_button":
             window1.hide()
-            window2=funkcje.make_window2()
+            try:
+                window2.un_hide()
+            except:
+                window2=funkcje.make_window2()
         if event == "TWO_button":
             window1.hide()
-            window3=funkcje.make_window3()
-        if event == "EXIT_button":
+            try:
+                window3.un_hide()
+            except:
+
+                window3=funkcje.make_window3()
+        if event == "EXIT_button" or event == sg.WIN_CLOSED:
             break
     
             
@@ -141,6 +148,8 @@ while True:
                 window["-WYNIK-"].update(dane)
             except:
                 pass
+        elif event == "EXIT_button" or event == sg.WIN_CLOSED:
+            break
     #dzialania na window 3
     if window==window3:
         print("xddd")
