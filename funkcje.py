@@ -13,10 +13,10 @@ def kwadrat(number):
 
 def make_window1():
     layout = [
-        [sg.Button("Tryb LSB",key="LSB_button", enable_events=True,size=(10, 2)),sg.Button("Tryb Drugi",key="TWO_button", enable_events=True,size=(10, 2))],
-        [sg.Button("Exit",key="EXIT_button", enable_events=True,size=(10, 2))],
+        [sg.Button("Tryb LSB",key="LSB_button", expand_x=True,expand_y=True, enable_events=True,size=(10, 2)),sg.Button("Tryb Drugi",key="TWO_button",expand_x=True,expand_y=True, enable_events=True,size=(10, 2))],
+        [sg.Button("Exit",key="EXIT_button", expand_x=True,expand_y=True, enable_events=True,size=(10, 2))],
     ]
-    return sg.Window('Window 1', layout, finalize=True)
+    return sg.Window('Window 1', layout, resizable=True, finalize=True)
 
 
 def make_window2():
@@ -54,7 +54,7 @@ def make_window2():
         ]
     ]
 
-    return sg.Window('Window 2', layout, finalize=True)
+    return sg.Window('Window 2', layout, resizable=True, finalize=True)
     
 def make_window3():
     print("xddd")
