@@ -14,8 +14,11 @@ def encode(message):
     pitches=[]
     durations=[]
     octave=random.randint(4,12)
-    ctr=0
-
+    ctr=2
+    pitches.append(2+octave*8)
+    durations.append(3+random.randint(0,49)/100)
+    pitches.append(3+octave*8)
+    durations.append(3+random.randint(0,49)/100)
     for i in msgarray:
         if len(pitches)!=len(durations) or len(pitches)!=ctr:
             print("Illegal characters")
@@ -34,10 +37,12 @@ def encode(message):
 
 
 
-def decode(encoded_message):
+def decode(encoded_message, window):
     pitches, durations=encoded_message
     octave=(pitches[0]-(pitches[0]%8))/8
     message=""
+    started=False
+
 
     for a in range(len(durations)):
         durations[a]=int(durations[a])
@@ -45,12 +50,18 @@ def decode(encoded_message):
     for i in range(len(pitches)):
         try:
             if cipher[durations[i]][pitches[i]%8]=="0":
-                return message
-            message=message+cipher[durations[i]][pitches[i]%8]
+                if started:
+                    window["RESULT"].update("Success")
+                    return message
+                started=True
+            if started and not cipher[durations[i]][pitches[i]%8]=="0" :
+                message=message+cipher[durations[i]][pitches[i]%8]
         except:
-            return "no message"
+            window["RESULT"].update("Failure")
+            return "FAIL"
         
-    return message
+    window["RESULT"].update("Failure")
+    return "FAIL"
 
 def midi_to_notes(midi_file: str) -> pd.DataFrame:
   pm = pretty_midi.PrettyMIDI(midi_file)
