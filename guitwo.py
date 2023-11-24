@@ -7,6 +7,7 @@ import time
 import threading
 import io
 from PIL import Image
+import api
 
 import funkcje
 import pyperclip
@@ -144,7 +145,7 @@ while True:
                 pass
         elif event == "5":
             try:
-                dane=funkcje.discovermessage(filename,1,window)
+                dane=funkcje.discovermessage(filename,window)
                 window["-WYNIK-"].update(dane)
             except:
                 pass
@@ -152,7 +153,53 @@ while True:
             break
     #dzialania na window 3
     if window==window3:
-        print("xddd")
+        #cofniecie do main menu
+        if event == "MAIN_menu":
+            window3.hide()
+            window1.un_hide()
+    # Wybor pliku okno 3
+        if event == "-FOLDER-":
+            folder = values["-FOLDER-"]
+            try:
+            # Get list of files in folder
+                file_list = os.listdir(folder)
+            except:
+                file_list = []
+
+            fnames = [
+                f
+                for f in file_list
+                if os.path.isfile(os.path.join(folder, f))
+                and f.lower().endswith(("midi"))
+            ]
+            window["-FILE LIST-"].update(fnames)
+        elif event == "-FILE LIST-":  # A file was chosen from the listbox     
+            try:
+                filename = os.path.join(values["-FOLDER-"], values["-FILE LIST-"][0])
+                window["-TOUT-"].update(filename)
+            except:
+                pass
+    #hahhahaha 4 zakoduj
+        elif event == "4":
+            try:
+                dane=values['-INPUT-']
+                outputname=values['-OUTPUT-']
+                print(dane,outputname)
+                api.m_encode(dane,outputname)
+            except:
+                pass
+                
+    #hahahahah 5 = odkoduj
+        elif event == "5":
+            print("halo")
+            try:
+                dane=api.m_decode(filename,window)
+                window["-WYNIK-"].update(dane)
+            except:
+                print("halo dwa")
+                pass
+        elif event == "EXIT_button" or event == sg.WIN_CLOSED:
+            break
 
 
 window.close()
