@@ -23,5 +23,5 @@ def m_decode(filename):
     return decoded_message
 
 
-#m_encode("ala ma kota", "test2")
-#print(m_decode("test2.midi"))
+m_encode("ala ma kota", "test2")
+print(m_decode("test2.midi"))

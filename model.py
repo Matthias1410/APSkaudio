@@ -9,10 +9,13 @@ import pretty_midi
 import seaborn as sns
 import tensorflow as tf
 import random
+import pickle
+import os
 
 from IPython import display
 from matplotlib import pyplot as plt
 from typing import Optional
+from helpers import dekerasify
 
 
 
@@ -56,15 +59,21 @@ def get_model():
     custom_objects={"my_package>mse_with_positive_pressure": mse_with_positive_pressure}
 
     with tf.keras.saving.custom_object_scope(custom_objects):
-        model=tf.keras.models.load_model("steganet5.h5")
+        filepath=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'steganet525.h5')
+        #model=tf.keras.models.load_model("steganet5.h5")
+        model=tf.keras.models.load_model(filepath)
     return model
 
 
 
 def gen_loop(notes):
+    filepath=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dataset_file.pkl')
+    with open(filepath, 'rb') as f:
+        dataset = pickle.load(f)
     key_order = ['pitch', 'step', 'duration']
-    tnotes=np.stack([notes[key] for key in key_order], axis=1)
-    input_notes=(tnotes[:4]/np.array([128,1,1]))
+    #tnotes=np.stack([notes[key] for key in key_order], axis=1)
+    tnotes=np.stack([dataset[key] for key in key_order], axis=1)
+    input_notes=(tnotes[:25]/np.array([128,1,1]))
     generated_notes=[]
     ctr=0
     prev_start=0.0
