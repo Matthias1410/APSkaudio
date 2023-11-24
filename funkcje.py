@@ -13,58 +13,100 @@ def kwadrat(number):
 
 def make_window1():
     layout = [
-        [sg.Button("Tryb LSB",key="LSB_button", expand_x=True,expand_y=True, enable_events=True,size=(10, 2)),sg.Button("Tryb Drugi",key="TWO_button",expand_x=True,expand_y=True, enable_events=True,size=(10, 2))],
-        [sg.Button("Exit",key="EXIT_button", expand_x=True,expand_y=True, enable_events=True,size=(10, 2))],
+        [sg.Button("Tryb LSB",key="LSB_button", expand_x=True,expand_y=True, enable_events=True,size=(20, 4)),sg.Button("Tryb Drugi",key="TWO_button",expand_x=True,expand_y=True, enable_events=True,size=(20, 4))],
+        [sg.Button("Exit",key="EXIT_button", expand_x=True,expand_y=True, enable_events=True,size=(40, 4))],
     ]
     return sg.Window('Window 1', layout, resizable=True, finalize=True)
 
 
 def make_window2():
     file_list_column = [
-        [sg.Button("Back to Main Menu",key="MAIN_menu", enable_events=True,size=(20, 2))],
-        [sg.Button("Jeden bit",key="MODE_ONE", enable_events=True,size=(10, 2)),sg.Button("Dwa bity",key="MODE_TWO", enable_events=True,size=(10, 2)),sg.Button("Trzy bity",key="MODE_THREE", enable_events=True,size=(10, 2))],
+        [sg.Button("Back to Main Menu",key="MAIN_menu",expand_x=True, enable_events=True,size=(20, 2))],
+        [sg.Button("Jeden bit",key="MODE_ONE",expand_x=True, enable_events=True,size=(10, 2)),sg.Button("Dwa bity",key="MODE_TWO",expand_x=True, enable_events=True,size=(10, 2)),sg.Button("Trzy bity",key="MODE_THREE",expand_x=True, enable_events=True,size=(10, 2))],
         [
             sg.Text("Sound Folder"),
-            sg.In(size=(25, 1), enable_events=True, key="-FOLDER-"),
+            sg.In(size=(25, 1),expand_x=True, enable_events=True, key="-FOLDER-"),
             sg.FolderBrowse(),
         ],
         [
             sg.Listbox(
-                values=[], enable_events=True, size=(40, 20), key="-FILE LIST-"
+                values=[], enable_events=True, expand_x=True,expand_y=True, size=(40, 20), key="-FILE LIST-"
             )
         ],
     ]
     image_viewer_column = [
         [sg.Text("Choose an .wav file on the left")],
         [sg.Text(size=(40, 1), key="-TOUT-")],
-        [sg.Text("Text to code",size=(15, 1)), sg.Multiline(key="-INPUT-",size=(20, 10))],
-        [sg.Text("outputname",size=(15, 1)), sg.InputText(key="-OUTPUT-",size=(20, 15))],
-        [sg.Button("Zakoduj wiadomosc",key="4", enable_events=True,size=(10, 2)),sg.Button("Odkoduj",key="5", enable_events=True,size=(10, 2)),sg.Text("Rezultat",size=(15, 1),key="RESULT")],
-        [sg.Text("Wynik dekodowanie",size=(15, 1)),sg.Multiline(key="-WYNIK-",size=(20, 10))],
-        [sg.Text(size=(20, 5),key="-TEXT-")],
+        [sg.Text("Text to code",size=(15, 1)), sg.Multiline(key="-INPUT-",size=(20, 10),expand_x=True,expand_y=True)],
+        [sg.Text("outputname",size=(15, 1)), sg.InputText(key="-OUTPUT-",size=(20, 15),expand_x=True)],
+        [sg.Button("Zakoduj wiadomosc",key="4",expand_x=True,expand_y=True, enable_events=True,size=(10, 2)),sg.Button("Odkoduj",key="5", expand_x=True,expand_y=True,enable_events=True,size=(10, 2)),sg.Text("Rezultat",size=(15, 1),key="RESULT")],
+        [sg.Text("Wynik dekodowanie",size=(15, 1)),sg.Multiline(key="-WYNIK-",size=(20, 10),expand_x=True,expand_y=True)],
+        #[sg.Text(size=(20, 5),key="-TEXT-")],
     
     ]
-    
-    
+    col1=sg.Column(file_list_column)
+    col2=sg.Column(image_viewer_column)
     layout = [
         [
-            sg.Column(file_list_column),
+            col1,
             sg.VSeperator(),
-            sg.Column(image_viewer_column),
+            col2,
         ]
     ]
-
-    return sg.Window('Window 2', layout, resizable=True, finalize=True)
+    okno=sg.Window('Window 2', layout, resizable=True, finalize=True)
+    col1.expand(True, True)
+    col2.expand(True, True)
+    return okno
     
 def make_window3():
-    print("xddd")
+    file_list_column = [
+        [sg.Button("Back to Main Menu",key="MAIN_menu",expand_x=True, enable_events=True,size=(20, 2))],
+        [
+            sg.Text("Sound Folder"),
+            sg.In(size=(25, 1),expand_x=True, enable_events=True, key="-FOLDER-"),
+            sg.FolderBrowse(),
+        ],
+        [
+            sg.Listbox(
+                values=[], enable_events=True, size=(40, 20),expand_x=True,expand_y=True, key="-FILE LIST-"
+            )
+        ],
+    ]
+    image_viewer_column = [
+        [sg.Text("Choose an .midi file on the left")],
+        [sg.Text(size=(40, 1), key="-TOUT-")],
+        [sg.Text("Text to code",size=(15, 1)), sg.Multiline(key="-INPUT-",size=(20, 10),expand_x=True,expand_y=True,)],
+        [sg.Text("outputname",size=(15, 1)), sg.InputText(key="-OUTPUT-",size=(20, 15),expand_x=True)],
+        [sg.Button("Zakoduj wiadomosc",key="4", enable_events=True,size=(10, 2),expand_x=True),sg.Button("Odkoduj",key="5", enable_events=True,size=(10, 2),expand_x=True),sg.Text("Rezultat",size=(15, 1),key="RESULT")],
+        [sg.Text("Wynik dekodowanie",size=(15, 1)),sg.Multiline(key="-WYNIK-",size=(20, 10),expand_x=True,expand_y=True,)],
+        #[sg.Text(size=(20, 5),key="-TEXT-")],
+    
+    ]
+    
+    col1=sg.Column(file_list_column)
+    col2=sg.Column(image_viewer_column)
+    layout = [
+        [
+            col1,
+            sg.VSeperator(),
+            col2,
+        ]
+    ]
+    okno=sg.Window('Window 3', layout, resizable=True, finalize=True)
+    col1.expand(True, True)
+    col2.expand(True, True)
+    return okno
     
     
 
 # Use wave package (native to Python) for reading the received audio file
-def discovermessage(file,tryb,window):
+def discovermessage(file,window):
     print("pls i need help")
-    song = wave.open(file, mode='rb')
+    try:    
+        song = wave.open(file, mode='rb')
+    except:
+        window["RESULT"].update("Failed to open file")
+        return ("FAIL")
 # Convert audio to byte array
     frame_bytes = bytearray(list(song.readframes(song.getnframes())))
 
@@ -92,6 +134,7 @@ def discovermessage(file,tryb,window):
     return(decoded)
     
 def hidemessage(file,string,output,tryb):
+    output="out\\"+output+".wav"
     print("odpalam hide message, filename=",file)
 # read wave audio file
     song = wave.open(file, mode='rb')
